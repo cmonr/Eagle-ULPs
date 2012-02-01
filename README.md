@@ -1,23 +1,23 @@
 ~$ man svg2poly
 
-_NAME_
+__NAME__
 
 svg2poly - import Simple SVG files as polygons in Eagle CAD
  
 
-_SYNOPSIS_
+__SYNOPSIS__
 
 svg2poly [options]
 
  
-_DESCRIPTION_
+__DESCRIPTION__
 
 There are currently a few Eagle ULPs that can import images into PCBs, but they can be fairly confusing to use. Furthermore, by having to convert to bitmaps, resolution is lost when the file is imported to the PCB.
 
 svg2poly is a program that reads Simple SVG files and outputs polygons onto the PCB, in one simple step. Scaling the image, changing the layer, and even adding a line border are made easy by passing parameters to the script. 
 
  
-_OPTIONS_
+__OPTIONS__
 
 Defaults are *-ratio 1.0 -layer tDocu -outline 0*
 
@@ -33,6 +33,6 @@ Defaults are *-ratio 1.0 -layer tDocu -outline 0*
     Change the width of the outline.
 
     
-_AUTHOR_
+__AUTHOR__
 
 Written by Cruz Monrreal II
