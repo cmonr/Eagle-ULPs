@@ -26,19 +26,24 @@ __OPTIONS__
 
 Defaults are *-ratio 1.0 -layer tDocu -outline 0*
 
--ratio *number*
+-ratio *number*<br/>
+
     >Change the X and Y ratio of the imported file. This number can be negative.
 
 -ratiox *number*
+
     >Change the X ratio of the imported file. This number can be negative.
 
 -ratioy *number*
+
     >Change the Y ratio of the imported file. This number can be negative.
 
 -layer *name*
+
     >Change the layer that the polygin is made in. This should be the name of the layer.
 
 -outline *width*
+
     >Change the width of the outline.
 
     
