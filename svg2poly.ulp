@@ -1,6 +1,6 @@
 /*
 * svg2poly.ulp
-* July 2011, By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
+* Feb 2012, By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
 *
 * Imports select .svg file and will draw it as a set of polygons
 * For best results, follow Inkscape instructions as closely as
@@ -14,11 +14,11 @@
 */
 
 #usage "<b>Convert a modified SVG file to a Polygon</b><p>\n"
-"       run svg2poly [ratio]\n\n"
-"       run svg2poly [ratio_x] [ratio_y] [layer] [thinkness]\n\n<p>"
+"       run svg2poly -ratio num\n"
+"       run svg2poly -ratiox numx -ratioy numy -layer layername -outline thickness\n<p>"
 "       The polygons will automatically be centered about the current 'mark'</p>\n"
 "		For instructions on how to prepare the SVG file, go to www.thinkmaketest.com\\nn"
-"<author>Author: Cruz Monrreal II\n(cruz.monrreal@gmail.com)\n7-Jul-2011</author>"
+"<author>Author: Cruz Monrreal II\n(cruz.monrreal@gmail.com)\n1-Feb-2011</author>"
 
 /* Inputs, Defaults */
 string layer = "tDocu";

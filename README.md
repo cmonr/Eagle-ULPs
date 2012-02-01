@@ -19,7 +19,7 @@ svg2poly is a program that reads Simple SVG files and outputs polygons onto the 
  
 _OPTIONS_
 
-Defaults are *-ratio 1 -layer tDocu -outline 0*
+Defaults are *-ratio 1.0 -layer tDocu -outline 0*
 
 -ratio *number*
     Change the X and Y ratio of the imported file. This number can be negative.
