@@ -1,16 +1,23 @@
 /*
 * swap.ulp
-* Nov 2012, By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
+* Jan 2013  , By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
 *
 * Swaps part names.
 *
 */
 
-#usage "<b>Swap part names</b><p>\n"
-"       run swap A B\n"
-"       A and B are part names\n"
-"<author>Author: Cruz Monrreal II\n(cruz.monrreal@gmail.com)\n1-Feb-2011</author>"
-
+#usage "<b>Swap Part Names</b>\n"
+"<p>Converts a board or schematic into a DXF file."
+"<p>Usage: run swap A B"
+"<p><p><b>Example:</b>"
+"<p>run swap R2 R14"
+"<p>This will swap parts R2 and R14 with eachother
+"<p><p>"
+"<small><table>"
+"<tr><td><i>Cruz Monrreal</i></td></tr>"
+"<tr><td><i>cruz.monrreal@gmail.com</i></td></tr>"
+"<tr><td><i>http://www.innovativemaker.com</i></td></tr>"
+"</table></small>"
 
 string cmd = "";
 string A = "";

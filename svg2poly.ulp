@@ -13,11 +13,27 @@
 *
 */
 
-#usage "<b>Convert a modified SVG file to a Polygon</b><p>\n"
-"       run svg2poly -ratio num\n"
-"       run svg2poly -ratiox numx -ratioy numy -layer layername -outline thickness\n<p>"
-"       The polygons will automatically be centered about the current 'mark'</p>\n"
-"<author>Author: Cruz Monrreal II\n(cruz.monrreal@gmail.com)\n1-Feb-2011</author>"
+#usage "<b>Import a Simple SVG file to a Polygon</b>\n"
+"<p>Converts a board or schematic into a DXF file."
+"<p><b>NOTE:</b> Polygons will automatically be centered about the current 'mark'</p>"
+"<p>Usage: run svg2poly [ -ratio <i>num</i> ] [ -layer <i>name</i> ] [ -outline <i>thickness</i> ]"
+"<p>Options:<br>"
+"<table>"
+"<tr><td>-ratio <i>num</i></td><td>define a suffix that will be appended to the file name</td></tr>"
+"<tr><td>-layer <i>name</i></td><td>select the unit for coordinates and dimensions</td></tr>"
+"<tr><td>-outline <i>thickness</i> </td><td>set the 'Always vector font' option</td></tr>"
+"</table>"
+"<p><p><b>Example:</b>"
+"<p>run svg2poly -ratio 2 -layer tDocu"
+"<p>This will import a Simple SVG file, scale it 2x, and draw it on the tDocu layer with no outline"
+"<p><p>"
+"<small><table>"
+"<tr><td><i>Cruz Monrreal</i></td></tr>"
+"<tr><td><i>cruz.monrreal@gmail.com</i></td></tr>"
+"<tr><td><i>http://www.innovativemaker.com</i></td></tr>"
+"</table></small>"
+
+
 
 /* Inputs, Defaults */
 string layer = "tDocu";
