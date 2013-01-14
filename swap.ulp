@@ -1,0 +1,42 @@
+/*
+* swap.ulp
+* Nov 2012, By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
+*
+* Swaps part names.
+*
+*/
+
+#usage "<b>Swap part names</b><p>\n"
+"       run swap A B\n"
+"       A and B are part names\n"
+"<author>Author: Cruz Monrreal II\n(cruz.monrreal@gmail.com)\n1-Feb-2011</author>"
+
+
+string cmd = "";
+string A = "";
+string B = "";
+    
+output("swapnames.log", "wt")
+{   
+    if (schematic){
+        schematic(S) {
+            S.parts(P){
+                if (P.name == argv[1]){
+                    A = argv[1];
+                }
+                
+                if (P.name == argv[2]){
+                    B = argv[2];
+                }
+            }
+        }
+    }
+    
+    if (A != "" && B != ""){
+        cmd += "name " + A + " _tmp_; ";
+        cmd += "name " + B + " " + A + "; ";
+        cmd += "name _tmp_ " + B + "; ";
+    }
+  
+    exit(cmd);
+}      
