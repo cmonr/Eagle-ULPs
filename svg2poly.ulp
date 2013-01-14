@@ -17,7 +17,6 @@
 "       run svg2poly -ratio num\n"
 "       run svg2poly -ratiox numx -ratioy numy -layer layername -outline thickness\n<p>"
 "       The polygons will automatically be centered about the current 'mark'</p>\n"
-"		For instructions on how to prepare the SVG file, go to www.thinkmaketest.com\\nn"
 "<author>Author: Cruz Monrreal II\n(cruz.monrreal@gmail.com)\n1-Feb-2011</author>"
 
 /* Inputs, Defaults */
