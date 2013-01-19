@@ -2,7 +2,7 @@ Select each script in the EAGLE Command Panel for more information.
 
 __INSTRUCTIONS for svg2poly__
 
-svg2poly was made to handle Simple SVG files from Inkscape. When I was working on it, I found the SVG spec to be incredibly complicated, and non-coherent. Along with having to write my own stack for recursion (the scripting language isn't the powerful), I was only ever able to import Text in a very specific way.
+svg2poly was made to handle Simple SVG files from Inkscape. It can currently only handle text.
 
 _Inkscape_
 * Type out the text that you want. Format it and such.
