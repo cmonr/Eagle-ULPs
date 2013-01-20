@@ -2,7 +2,7 @@ Select each script in the EAGLE Command Panel for more information.
 
 __INSTRUCTIONS for svg2poly__
 
-svg2poly was made to handle Simple SVG files from Inkscape. It can currently only handle text.
+svg2poly was made to handle Plain SVG files from Inkscape. It can currently only handle text.
 
 _Inkscape_
 * Type out the text that you want. Format it and such.
@@ -19,7 +19,7 @@ _Inkscape_
 *   Repeat with all closed letters
 * Select all (w/ Node Cursor)
 * *Ctrl-Shift-K* (Break Apart)
-* Save As > Simple SVG
+* Save As > Plain SVG
 
 _Eagle_ 
 * Open your .BRD file
