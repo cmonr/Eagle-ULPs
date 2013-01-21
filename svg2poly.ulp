@@ -225,6 +225,12 @@ void extract_pts(string pts, string transform)
 			new_pts++;
 		}
 	}
+    
+    // Close the polygon with the starting point
+	svgcoords_to_coords(svg_cmds[1]);
+	pts_x[num_pts] = tmp_coords[0];
+	pts_y[num_pts++] = tmp_coords[1];
+	new_pts++;
 	
 	// Apply transform if needed
 	if (transform != ""){
