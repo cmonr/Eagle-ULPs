@@ -1,9 +1,9 @@
 /*
 * svg2poly.ulp
-* Feb 2012, By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
+* Jan 2013, By Cruz Monrreal II (Cruz.Monrreal@gmail.com)
 *
-* Imports select .svg file and will draw it as a set of polygons
-* For best results, follow Inkscape instructions as closely as
+* Imports Plain .svg file and will draw it as a set of polygons
+* For best results, follow GitHub instructions as closely as
 * possible.
 *
 *
@@ -82,10 +82,10 @@ string pull()
 *  Encodes all necessary information into a single string
 *  for stack-based recursion
 */
-string pack(string xml, int repush, int num_pts)
+string pack(string xml, int num_pts)
 {
 	string tmp;
-	sprintf(tmp, "%s^%d^%d", xml, repush, num_pts);
+	sprintf(tmp, "%s^%d", xml, num_pts);
 	return tmp;
 }
 
@@ -259,76 +259,40 @@ void extract_pts(string pts, string transform)
 *  Traverse through the tree of groups, adding points to paths,
 *  while applying group transforms in the process
 */
-void extract_nested_data(string xml)
+void extract_nested_data()
 {
-	string ops[];
-	string children[];
+	string xml[];
+	string elements[];
+	string tags[];
 	int size;
 	
-	push(pack(xml, 0, num_pts));
-	
 	while(stack != ""){
-		strsplit(ops, pull(), '^');
+        // Pop xml to parse
+		strsplit(xml, pull(), '^');
 		
-		// Find # of children
-		size = xmlelements(children, ops[0], "g/g");
-		
-		if (size != 0 && ops[1] == "0"){
-			// Repush
-			push(ops[0] + "^1^" + ops[2]);
-			
-			// Reverse push children
-			for(int i=size-1; i>=0; i--)
-				push(pack(children[i], 0, num_pts));
-		}else{
-			// Search for and add points
-			print("Searching group " + xmlattribute(ops[0], "g", "id"));
-			
-			string paths[];
-			int num_paths = xmlelements(paths, ops[0], "g/path");
-			
-			for(int i=0; i<num_paths; i++){
-				print(" Found Path " + xmlattribute(paths[i], "path", "id"));
-				
-				// Extract points from each line/path
-				extract_pts(xmlattribute(paths[i], "path", "d"), xmlattribute(paths[i], "path", "transform"));
-			}
-			
-			// Find and apply group transform
-			string transform = xmlattribute(ops[0], "g", "transform");
-			if (transform != ""){
-				// Figure out where to start the transform
-				int offset = 0;
-				
-				if (ops[1] != "0")
-					offset = strtol(ops[2]);
-				
-				print(" Found transform " + transform);
-				
-				if (strstr(transform, "translate") != -1){
-					int a = strchr(transform, '('),
-						b = strchr(transform, ')', a+1);
-
-					// Extract translation offsets
-					svgcoords_to_coords(strsub(transform, a+1, b-a-1));
-
-					// Translate points
-					for(int i=offset; i < num_pts; i++){
-						pts_x[i] += tmp_coords[0];
-						pts_y[i] += tmp_coords[1];
-						//printf("%f, %f\n", pts_x[i + offset], pts_y[i + offset]);
-					}
-				}else if (strstr(transform, "matrix") != -1){
-					// Do Matrix math (yay...)
-					/* REMEMBER: Inkscape y axis is inverted...*/
-					print(" TODO: Implement Matrix Transform");
-				}else
-					print("Unknown path transformation:\n " + transform);
-				
-			}else{
-				print(" No transform found");
-			}		
-		}
+        // Find name of root
+        string tmp[], root;
+        xmltags(tmp, xml[0], "");
+        root = tmp[0];
+        
+        if (root == "path"){
+            // Path found
+            print(" PATH " + xmlattribute(xml[0], "path", "id") + " FOUND ");
+            extract_pts(xmlattribute(xml[0], "path", "d"), xmlattribute(xml[0], "path", "transform"));
+        //}else if (root == ""){
+        // Add more cases here
+        }else{
+            int a = xmltags(tags, xml[0], root);
+            for(int i=0; i<a; i++){
+                int b = xmlelements(elements, xml[0], root+"/"+tags[i]);
+                
+                // Reverse push children
+                for(int j=0; j<b; j++){
+                    // Push child back to search for more paths
+                    push(pack(elements[j], num_pts));
+                }
+            }
+        }
 	}
 }
 
@@ -356,7 +320,8 @@ output("svg2poly.log", "wt")
 		}
 		
 		// Extract Points and apply transformations
-		extract_nested_data(xmlelement(master_xml, "svg/g"));
+        push(pack(master_xml, num_pts));
+		extract_nested_data();
 		
 		// Correct Inkscape's Formatting issue
 		for(i=0; i<num_pts; i++)
