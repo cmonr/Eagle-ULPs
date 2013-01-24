@@ -7,7 +7,6 @@
 */
 
 #usage "<b>Swap Part Names</b>\n"
-"<p>Converts a board or schematic into a DXF file."
 "<p>Usage: run swap A B"
 "<p><p><b>Example:</b>"
 "<p>run swap R2 R14"

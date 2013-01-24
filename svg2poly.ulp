@@ -13,8 +13,7 @@
 *
 */
 
-#usage "<b>Import a Simple SVG file to a Polygon</b>\n"
-"<p>Converts a board or schematic into a DXF file."
+#usage "<b>Import a Plain SVG file to a Polygon</b>\n"
 "<p><b>NOTE:</b> Polygons will automatically be centered about the current 'mark'</p>"
 "<p>Usage: run svg2poly [ -ratio <i>num</i> ] [ -layer <i>name</i> ] [ -outline <i>thickness</i> ]"
 "<p>Options:<br>"
@@ -25,7 +24,7 @@
 "</table>"
 "<p><p><b>Example:</b>"
 "<p>run svg2poly -ratio 2 -layer tDocu"
-"<p>This will import a Simple SVG file, scale it 2x, and draw it on the tDocu layer with no outline"
+"<p>This will import a Plain SVG file, scale it 2x, and draw it on the tDocu layer with no outline"
 "<p><p>"
 "<small><table>"
 "<tr><td><i>Cruz Monrreal</i></td></tr>"
@@ -360,7 +359,7 @@ output("svg2poly.log", "wt")
 			pts_x[i] -= min_x + x_center;
 			pts_y[i] -= min_y + y_center;
 		}
-		printf("%f %f\n", x_center, y_center);
+		printf("\nObject origin:\n%f %f\n", x_center, y_center);
 		
 		// Generate eagle command
 		for(i=0; i<num_pts; i++){
