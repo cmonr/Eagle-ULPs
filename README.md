@@ -2,7 +2,7 @@ Select each script in the EAGLE Command Panel for more information.
 
 __INSTRUCTIONS for svg2poly__
 
-svg2poly was made to handle Plain SVG files from Inkscape. It can currently only handle text.
+svg2poly was made to handle Plain SVG files from Inkscape. It can currently only handle paths.
 
 _Inkscape_
 * In Inkscape 0.47 or newer, Preferences > SVG output > Path data, untick "Allow relative coordinates"
