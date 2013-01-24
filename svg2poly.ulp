@@ -360,7 +360,7 @@ output("svg2poly.log", "wt")
 			pts_x[i] -= min_x + x_center;
 			pts_y[i] -= min_y + y_center;
 		}
-		printf("%f %f\n", x_center, y_center);
+		printf("\nObject origin:\n%f %f\n", x_center, y_center);
 		
 		// Generate eagle command
 		for(i=0; i<num_pts; i++){
