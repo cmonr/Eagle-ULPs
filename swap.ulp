@@ -10,7 +10,7 @@
 "<p>Usage: run swap A B"
 "<p><p><b>Example:</b>"
 "<p>run swap R2 R14"
-"<p>This will swap parts R2 and R14 with eachother
+"<p>This will swap parts R2 and R14 with eachother"
 "<p><p>"
 "<small><table>"
 "<tr><td><i>Cruz Monrreal</i></td></tr>"
@@ -21,28 +21,43 @@
 string cmd = "";
 string A = "";
 string B = "";
-    
+
 output("swapnames.log", "wt")
-{   
+{
     if (schematic){
         schematic(S) {
             S.parts(P){
                 if (P.name == argv[1]){
                     A = argv[1];
                 }
-                
+
                 if (P.name == argv[2]){
                     B = argv[2];
                 }
             }
         }
+    }else if (library){
+        library(L) {
+            L.packages(P){
+                P.contacts(C){
+                    if (C.name == argv[1]){
+                        A = argv[1];
+                    }
+
+                    if (C.name == argv[2]){
+                        B = argv[2];
+                    }
+                }
+            }
+        }
     }
-    
+
+
     if (A != "" && B != ""){
         cmd += "name " + A + " _tmp_; ";
         cmd += "name " + B + " " + A + "; ";
         cmd += "name _tmp_ " + B + "; ";
     }
-  
+
     exit(cmd);
-}      
+}
