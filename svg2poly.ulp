@@ -18,9 +18,9 @@
 "<p>Usage: run svg2poly [ -ratio <i>num</i> ] [ -layer <i>name</i> ] [ -outline <i>thickness</i> ]"
 "<p>Options:<br>"
 "<table>"
-"<tr><td>-ratio <i>num</i></td><td>define a suffix that will be appended to the file name</td></tr>"
-"<tr><td>-layer <i>name</i></td><td>select the unit for coordinates and dimensions</td></tr>"
-"<tr><td>-outline <i>thickness</i> </td><td>set the 'Always vector font' option</td></tr>"
+"<tr><td>-ratio <i>num</i></td><td>scale SVG with the given ratio, default 1</td></tr>"
+"<tr><td>-layer <i>name</i></td><td>change layer that SVG is drawn on, default tDocu</td></tr>"
+"<tr><td>-outline <i>thickness</i> </td><td>draw an outline of the given size, default 0</td></tr>"
 "</table>"
 "<p><p><b>Example:</b>"
 "<p>run svg2poly -ratio 2 -layer tDocu"
@@ -29,7 +29,7 @@
 "<small><table>"
 "<tr><td><i>Cruz Monrreal</i></td></tr>"
 "<tr><td><i>cruz.monrreal@gmail.com</i></td></tr>"
-"<tr><td><i>http://www.innovativemaker.com</i></td></tr>"
+"<tr><td><i>http://anomalousmaker.com</i></td></tr>"
 "</table></small>"
 
 
@@ -190,7 +190,7 @@ int svgcoords_to_coords(string s)
 /*
 *  Extract points from a given svg path.
 *  ASSUMES: User followed instructions on site
-*     File was saved as Plain SVG & NO Relative Moves allowed
+*     File was saved as Plain SVG with Relative Moves
 */
 void extract_pts(string pts, string transform)
 {
