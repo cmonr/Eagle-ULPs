@@ -201,18 +201,25 @@ void extract_pts(string pts, string transform)
   if(svg_pts[0] == "M"){
     // Coords are Absolute
     mode = 1;
+
+    sprintf(svg_pts[1], "%s,%s", svg_pts[1], svg_pts[2]);
+
   }else{
     // Coords are Relative
     mode = 0;
   }
 
+  poly_start[global_pts] = 1;
 	// Path format:
 	//  m x,y x,y L X,Y l x,y .... z
-  poly_start[global_pts] = 1;
   svgcoords_to_coords(svg_pts[1]);
   pts_x[global_pts] = tmp_coords[0];
   pts_y[global_pts] = tmp_coords[1];
   new_pts++;
+
+  if (mode == 1) {
+    i++;
+  }
 
   printf("%2d) %2.2f,%2.2f\n", num_polys, tmp_coords[0], tmp_coords[1]);
 
@@ -221,6 +228,7 @@ void extract_pts(string pts, string transform)
       if(svg_pts[i] == "M"){
         // Coords are Absolute
         mode = 1;
+        sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
       }else{
         // Coords are Relative
         mode = 0;
@@ -234,6 +242,7 @@ void extract_pts(string pts, string transform)
       }else{
         pts_x[global_pts + new_pts] = tmp_coords[0];
         pts_y[global_pts + new_pts] = tmp_coords[1];
+        i++;
       }
 
       new_pts++;
@@ -244,6 +253,9 @@ void extract_pts(string pts, string transform)
       // Coords are Offset
       mode = 0;
     }else{
+      if (mode == 1) {
+        sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
+      }
       svgcoords_to_coords(svg_pts[i]);
 
       if (tmp_coords[0] == 0 && tmp_coords[1] == 0){
@@ -261,6 +273,10 @@ void extract_pts(string pts, string transform)
         printf("    %2.2f,%2.2f\n", pts_x[global_pts + new_pts], pts_y[global_pts + new_pts]);
         poly_start[global_pts + new_pts] = 0;
         new_pts++;
+      }
+
+      if (mode == 1) {
+        i++;
       }
     }
 
