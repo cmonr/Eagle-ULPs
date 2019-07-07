@@ -385,6 +385,11 @@ void extract_pts(string pts, string transform)
 	// assume numerical coords if none of the above conditions are met
 	else
 	{
+	
+        if (mode == 1) 
+        {
+          sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
+        }
 	  
 	  // Line-to command, parse coordinates from text
 	  if ((mode == 0) || (mode == 1))
