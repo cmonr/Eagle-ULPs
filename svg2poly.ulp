@@ -291,7 +291,7 @@ void extract_pts(string pts, string transform)
 	{
 		scaleFactor = 1.0;
 	}
-	printf("Scale factor = %f\n",scaleFactor);
+	printf("SVG scale factor = %f\n",scaleFactor);
 	
 	string svg_pts[];
 	int size = strsplit(svg_pts, pts, ' '),
@@ -322,7 +322,10 @@ void extract_pts(string pts, string transform)
 
   printf("%2d) %2.2f,%2.2f\n", num_polys, tmp_coords[0], tmp_coords[1]);
   
-  while (i < size - 1){
+  while ((i < size - 1) && (svg_pts[i] != "z")){
+    tmp_coords[0] = 0;
+    tmp_coords[1] = 0;
+  
     if (svg_pts[i] == "m" || svg_pts[i] == "M")
 	{
       if(svg_pts[i] == "M")
@@ -335,7 +338,7 @@ void extract_pts(string pts, string transform)
         mode = 0;
       }
 	  
-		svgcoords_to_coords(svg_pts[++i]);
+      svgcoords_to_coords(svg_pts[++i]);
 
       if(mode == 0){
         pts_x[global_pts + new_pts] += tmp_coords[0] * scaleFactor;
@@ -343,7 +346,6 @@ void extract_pts(string pts, string transform)
       }else{
         pts_x[global_pts + new_pts] = tmp_coords[0] * scaleFactor;
         pts_y[global_pts + new_pts] = tmp_coords[1] * scaleFactor;
-        i++;
       }
 
       new_pts++;
@@ -383,15 +385,11 @@ void extract_pts(string pts, string transform)
 	// assume numerical coords if none of the above conditions are met
 	else
 	{
-	
-      if (mode == 1) 
-	  {
-        sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
-      }
 	  
 	  // Line-to command, parse coordinates from text
 	  if ((mode == 0) || (mode == 1))
 	  {
+	    sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
 		svgcoords_to_coords(svg_pts[i]);
 	  }
 	  
