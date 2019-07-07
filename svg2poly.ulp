@@ -303,9 +303,6 @@ void extract_pts(string pts, string transform)
   if(svg_pts[0] == "M"){
     // Coords are Absolute
     mode = 1;
-
-    sprintf(svg_pts[1], "%s,%s", svg_pts[1], svg_pts[2]);
-
   }else{
     // Coords are Relative
     mode = 0;
@@ -332,7 +329,6 @@ void extract_pts(string pts, string transform)
 	  {
         // Coords are Absolute
         mode = 1;
-        sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
       }else{
         // Coords are Relative
         mode = 0;
@@ -385,16 +381,11 @@ void extract_pts(string pts, string transform)
 	// assume numerical coords if none of the above conditions are met
 	else
 	{
-	
-        if (mode == 1) 
-        {
-          sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
-        }
 	  
 	  // Line-to command, parse coordinates from text
 	  if ((mode == 0) || (mode == 1))
 	  {
-	    sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
+	    //sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
 		svgcoords_to_coords(svg_pts[i]);
 	  }
 	  
