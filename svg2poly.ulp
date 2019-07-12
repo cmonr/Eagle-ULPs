@@ -46,6 +46,8 @@ int poly_start[], global_pts=0, num_polys=0;
 real pts_x[], pts_y[];
 real tmp_coords[];
 real scaleFactor = 1.0; // SVG defined
+real SvgTranslationX = 0.0; // SVG defined
+real SvgTranslationY = 0.0; // SVG defined
 string file;	// filename of SVG
 
 /* Output */
@@ -58,6 +60,7 @@ string stack = "";
 
 /*** Stack Helper Functions ***/
 void push(string s){ stack = (stack == "") ? s : stack + "|" + s; }
+
 string pull()
 {
 	string tmp;
@@ -280,114 +283,138 @@ int svgcoords_to_coords(string s)
 void extract_pts(string pts, string transform)
 {
 
-	// look for a scale transformation
-	int scalePos = strrstr(transform,"scale");
-	if(scalePos >= 0)
+	
+	// TODO: deal with "rotate" transforms
+	
+	// look for a matrix transformation
+	int matrixPos = strrstr(transform,"matrix");
+	if(matrixPos >= 0)
 	{
-		string scaleString = strsub(transform,scalePos+6);
-		scaleFactor = strtod(strsub(scaleString,0, strlen(scaleString)-1)); // trim last char ")"
+		// assuming that X and Y scaling are equal, and no rotation.
+		string matrixString = strsub(transform,matrixPos+7);
+		string matrixFactors[];
+		strsplit(matrixFactors,strsub(matrixString,0, strlen(matrixString)-1),','); // trim last char ")"
+		scaleFactor = strtod(matrixFactors[0]); // Note: the Y factor is at matrixFactors[3] 
+		SvgTranslationX = strtod(matrixFactors[4]);
+		SvgTranslationY = strtod(matrixFactors[5]);
+	
 	}
-	else 
+	else
 	{
-		scaleFactor = 1.0;
+		int scalePos = strrstr(transform,"scale");
+		if(scalePos >= 0)
+		{
+			string transformString = strsub(transform,scalePos+6);
+			scaleFactor = strtod(strsub(transformString,0, strlen(transformString)-1)); // trim last char ")"
+		}
+		else 
+		{
+			scaleFactor = 1.0;
+		}
+		
+		// look for SVG translation
+		int transPos = strrstr(transform,"translate");
+		if(transPos >= 0)
+		{
+			string transformString = strsub(transform,transPos+10);
+			string transFactors[];
+			strsplit(transFactors,strsub(transformString,0, strlen(transformString)-1),','); // trim last char ")"
+			SvgTranslationX = strtod(transFactors[0]);
+			SvgTranslationY = strtod(transFactors[1]);
+		}
+		else 
+		{
+			SvgTranslationX = 0.0;
+			SvgTranslationY = 0.0;
+		}
+		
 	}
-	printf("Scale factor = %f\n",scaleFactor);
+	
+	printf("SVG scale factor = %f\n",scaleFactor);
+	printf("SVG offset = %f,%f\n",SvgTranslationX,SvgTranslationY);
 	
 	string svg_pts[];
 	int size = strsplit(svg_pts, pts, ' '),
-		new_pts = 0;
-	int i = 2;
-  int mode;
+	new_pts = 0;
+	int i = 0;
+	int mode = 0;
+
+  printf("POLYGON %2d)\n", num_polys);
   
-
-  if(svg_pts[0] == "M"){
-    // Coords are Absolute
-    mode = 1;
-
-    sprintf(svg_pts[1], "%s,%s", svg_pts[1], svg_pts[2]);
-
-  }else{
-    // Coords are Relative
-    mode = 0;
-  }
-
-  poly_start[global_pts] = 1;
-	// Path format:
-	//  m x,y x,y L X,Y l x,y .... z
-	
-  svgcoords_to_coords(svg_pts[1]);
-  pts_x[global_pts] = tmp_coords[0] * scaleFactor;
-  pts_y[global_pts] = tmp_coords[1] * scaleFactor;
-  new_pts++;
-
-  printf("%2d) %2.2f,%2.2f\n", num_polys, tmp_coords[0], tmp_coords[1]);
+  while ((i < size ) && (svg_pts[i] != "z") && (svg_pts[i] != "Z"))
+  {    
   
-  while (i < size - 1){
-    if (svg_pts[i] == "m" || svg_pts[i] == "M")
+	if (svg_pts[i] == "L" )
 	{
-      if(svg_pts[i] == "M")
-	  {
-        // Coords are Absolute
-        mode = 1;
-        sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
-      }else{
-        // Coords are Relative
-        mode = 0;
-      }
-	  
-		svgcoords_to_coords(svg_pts[++i]);
-
-      if(mode == 0){
-        pts_x[global_pts + new_pts] += tmp_coords[0] * scaleFactor;
-        pts_y[global_pts + new_pts] += tmp_coords[1] * scaleFactor;
-      }else{
-        pts_x[global_pts + new_pts] = tmp_coords[0] * scaleFactor;
-        pts_y[global_pts + new_pts] = tmp_coords[1] * scaleFactor;
-        i++;
-      }
-
-      new_pts++;
-    }
-	
-	else if (svg_pts[i] == "L" )
-	{
-      // Coords are Absolute, command is L
-      mode = 1;
+		// Coords are Absolute, command is L
+		printf("Line (abs)");
+		mode = 1;
     }
 	else if (svg_pts[i] == "l")
 	{
-      // Coords are Offset, command is l
-      mode = 0;
+		// Coords are Offset, command is l
+		printf("Line (rel)");
+		mode = 0;
     }
 	else if (svg_pts[i] == "H")
 	{
-      // Coords are Absolute, command is H
-      mode = 3;
+		// Coords are Absolute, command is H
+		printf("Horz (abs)");
+		mode = 3;
     }
 	else if (svg_pts[i] == "h")
 	{
-      // Coords are Offset, command is h
-      mode = 2;
+		// Coords are Offset, command is h
+		printf("Horz (rel)");
+		mode = 2;
+		tmp_coords[0] = 0;
+		tmp_coords[1] = 0;
     }
 	else if (svg_pts[i] == "V" )
 	{
-      // Coords are Absolute, command is V
-      mode = 5;
+		// Coords are Absolute, command is V
+		printf("Vert (abs)");
+		mode = 5;
     }
 	else if (svg_pts[i] == "v")
 	{
-      // Coords are Offset, command is v
-      mode = 4;
+		// Coords are Offset, command is v
+		printf("Vert (rel)");
+		mode = 4;
+		tmp_coords[0] = 0;
+		tmp_coords[1] = 0;
     }
+	else if (svg_pts[i] == "m")
+	{
+		// Coords are Relative
+		printf("Move (rel)");
+		mode = 6;
+	}
+	else if (svg_pts[i] == "M")
+	{
+		// Coords are Absolute
+		printf("Move (abs)");
+		mode = 7;
+	}
+	else if (svg_pts[i] == "c")
+	{
+		// Coords are Relative
+		printf("curve (rel)");
+		mode = 0;
+		i += 2; // flatten curve, just use endpoints
+	}
+	else if (svg_pts[i] == "C")
+	{
+		// Coords are Absolute
+		printf("curve (abs)");
+		mode = 1;
+		i += 2; // flatten curve, just use endpoints
+	}
 	
 	// assume numerical coords if none of the above conditions are met
 	else
 	{
-	
-      if (mode == 1) 
-	  {
-        sprintf(svg_pts[i], "%s,%s", svg_pts[i], svg_pts[i+1]);
-      }
+	  poly_start[global_pts + new_pts] = 0;
 	  
 	  // Line-to command, parse coordinates from text
 	  if ((mode == 0) || (mode == 1))
@@ -403,33 +430,49 @@ void extract_pts(string pts, string transform)
 	  }
 	  
 	  // vertical line, update Y only
-	  if ((mode == 4) || (mode == 5))
+	  else if ((mode == 4) || (mode == 5))
 	  {
 		mode -= 4;
 		tmp_coords[1] = strtod(svg_pts[i]);
 	  }
+	  
+	  // Move-to command, parse coordinates from text
+	  else if ((mode == 6) || (mode == 7))
+	  {
+		// If a relative moveto (m) appears as the first element of the path, then it is treated as a pair of absolute coordinates
+		mode = 1;
+		svgcoords_to_coords(svg_pts[i]);
+		poly_start[global_pts + new_pts] = 1;
+	  }
 
       if (tmp_coords[0] == 0 && tmp_coords[1] == 0)
 	  {
-        print("ERROR");
+        print("ERROR\n");
       }
 	  else
 	  {
-        poly_start[global_pts + new_pts] = 0;
         if (mode == 0)
 		{
-          pts_x[global_pts + new_pts] = pts_x[global_pts + new_pts - 1] + tmp_coords[0] * scaleFactor;
-          pts_y[global_pts + new_pts] = pts_y[global_pts + new_pts - 1] + tmp_coords[1] * scaleFactor;
-        }
+			int prevIndex = global_pts + new_pts - 1;
+			if (prevIndex < 0) {prevIndex = 0;} // in case this is the very first instruction
+			pts_x[global_pts + new_pts] = pts_x[prevIndex] + tmp_coords[0] * scaleFactor + SvgTranslationX;
+			pts_y[global_pts + new_pts] = pts_y[prevIndex] + tmp_coords[1] * scaleFactor + SvgTranslationY;
+		}
 		else if (mode == 1)
 		{
-          pts_x[global_pts + new_pts] = tmp_coords[0] * scaleFactor;
-          pts_y[global_pts + new_pts] = tmp_coords[1] * scaleFactor;
-        }
+			pts_x[global_pts + new_pts] = tmp_coords[0] * scaleFactor + SvgTranslationX;
+			pts_y[global_pts + new_pts] = tmp_coords[1] * scaleFactor + SvgTranslationY;
+		}
 
-        printf("    %2.2f,%2.2f\n", pts_x[global_pts + new_pts], pts_y[global_pts + new_pts]);
-        poly_start[global_pts + new_pts] = 0;
+        printf("\traw = %2.2f,%2.2f\tcoord = %2.2f,%2.2f\n", tmp_coords[0], tmp_coords[1], pts_x[global_pts + new_pts], pts_y[global_pts + new_pts]);
+        
         new_pts++;
+		
+		// remove duplicate points
+		if (global_pts + new_pts > 1)
+		{
+			if ((pts_x[global_pts + new_pts] == pts_x[global_pts + new_pts - 1]) && (pts_y[global_pts + new_pts] == pts_y[global_pts + new_pts - 1])) {new_pts--;}
+		}
       }
 
     }
@@ -437,14 +480,21 @@ void extract_pts(string pts, string transform)
     i++;
   }
 
-    // Close the polygon with the starting point
-  svgcoords_to_coords(svg_pts[1]);
-  pts_x[global_pts + new_pts] = tmp_coords[0] * scaleFactor;
-  pts_y[global_pts + new_pts] = tmp_coords[1] * scaleFactor;
-  new_pts++;
+	// Close the polygon with the starting point
 
-  global_pts += new_pts;
-  num_polys++;
+	svgcoords_to_coords(svg_pts[1]);
+	pts_x[global_pts + new_pts] = tmp_coords[0] * scaleFactor + SvgTranslationX;
+	pts_y[global_pts + new_pts] = tmp_coords[1] * scaleFactor + SvgTranslationY;
+	printf("End polygon at %2.2f,%2.2f\n\n", pts_x[global_pts + new_pts], pts_y[global_pts + new_pts]);
+
+	
+	// remove duplicate points
+	if ((pts_x[global_pts + new_pts] == pts_x[global_pts + new_pts - 1]) && (pts_y[global_pts + new_pts] == pts_y[global_pts + new_pts - 1])) {new_pts--;}
+	
+	new_pts++;
+
+	global_pts += new_pts;
+	num_polys++;
 }
 
 /*

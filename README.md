@@ -5,7 +5,6 @@ __INSTRUCTIONS for svg2poly__
 svg2poly was made to handle Plain SVG files from Inkscape. It can currently only handle paths.
 
 _Inkscape_
-* In Inkscape 0.47 or newer, Preferences > SVG output > Path data, tick "Allow relative coordinates"
 * Type out the text that you want. Format it and such.
 * Lock the height/width ratio
 * Change height to 100 (this helps with changing the ratio)
@@ -20,6 +19,7 @@ _Inkscape_
 *   Repeat with all closed letters
 * Select all (w/ Node Cursor)
 * *Ctrl-Shift-K* (Break Apart)
+* Resize canvas with File > Document properties. Click "Resize to drawing or selection"
 * Save As > Plain SVG
 
 _Eagle_ 
